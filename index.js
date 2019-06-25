@@ -98,7 +98,10 @@ window.onload = function () {
         var items = document.getElementsByClassName('color');
         console.log(items)
         for (var i = 0; i < items.length; i++) {
+
+            if(!items[i].value.length == 0){
             text = text.replace(items[i].id, items[i].value);
+            }
         }
         var link = document.getElementById('downloadlink');
         link.href = makeTextFile(text);
