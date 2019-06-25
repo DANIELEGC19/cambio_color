@@ -1,0 +1,33 @@
+<link href="style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<html>
+<header>
+    Title
+</header>
+
+<body>
+    <div class="input-group">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="files" name="file"
+                aria-describedby="inputGroupFileAddon01">
+            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+        </div>
+        <div class="input-group-append">
+            <button id="create" class="btn btn-primary">Buscar Colores</button>
+        </div>
+    </div>
+    <div id="progress_bar">
+        <div class="percent">0%</div>
+    </div>
+    <div class="container">
+        <ul id="my-list" class="list-group" title="Famous Doctors">
+        </ul>
+        <input type='button' class='btn btn-success' id='change' value='Change' />
+        <a download="info.css" id="downloadlink" style="display: none">Download</a>
+    </div>
+</body>
+
+</html>
+
+<script src="index.js"></script>
