@@ -2,6 +2,9 @@ var text;
 var reader;
 var replaced;
 var colors;
+var any;
+var arr = [];
+var nuevo_css = "";
 var progress = document.querySelector('.percent');
 
 function abortRead() {
@@ -52,8 +55,16 @@ function handleFileSelect(evt) {
     reader.onload = function (e) {
         // Ensure that the progress bar displays 100% at the end.
         text = reader.result;
-        var reg = new RegExp(/(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{5}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{3}))|((rgb|RGB|rgba|RGBA)[(][0-9 ,]+[)])/gi);
-        colors = text.match(reg);
+        var reg_color = new RegExp(/(#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{5}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{3}))|((rgb|RGB|rgba|RGBA)[(][0-9 ,]+[)])/gi);
+        var reg_any = new RegExp(/(.+[{]([^{]|\s)*[}])/gi);
+        var reg_obj = new RegExp(/(.+[{])/gi);
+        any = text.match(reg_any);
+        any.forEach((obj,index) => {
+            if(obj.match(reg_color)){
+                arr[index] = [obj.match(reg_obj), obj.match(reg_color)]
+            }
+        });
+        colors = text.match(reg_color);
         colors = [...new Set(colors)];
         progress.style.width = '100%';
         progress.textContent = '100%';
@@ -87,25 +98,36 @@ window.onload = function () {
 
     create.addEventListener('click', function () {
         const list = document.querySelector('#my-list');
-        list.innerHTML = colors.map((element, index) =>
-            "<div style='height: 20px; width: 20px;background-color: "+element+";'></div><li class=listItem>" + element + "</li><input type='text' class='color' id='" + element + "' value='' />"
-        ).join('');
+        var string = "";
+        arr.forEach((element, index) =>{
+            element[1].forEach((color, index) =>
+                string += "<div style='border: black 3px groove; height: 20px; width: 20px;background-color: "+color+";'></div><li class=listItem>" + color+ "--" +element[0]+ "</li><input type='text' class='color' id='" + color+ "--" +element[0]+ "' value='' />"
+            )
+        });
+        list.innerHTML = string;
     }, false);
 
     var changeColor = document.getElementById('change');
 
     changeColor.addEventListener('click', function () {
         var items = document.getElementsByClassName('color');
-        console.log(items)
+        var css = [];
         for (var i = 0; i < items.length; i++) {
-
             if(!items[i].value.length == 0){
-            text = text.replace(items[i].id, items[i].value);
+                css = items[i].id.split("--")
+                text = text.replace(items[i].id, items[i].value);
+                any.forEach((obj,index) => {
+                    if(obj.match(css[1])){
+                        any[index] = obj.replace(css[0], items[i].value)
+                    }
+                });
             }
         }
+        any.forEach((obj,index) => {
+            nuevo_css += obj
+        });
         var link = document.getElementById('downloadlink');
-        link.href = makeTextFile(text);
+        link.href = makeTextFile(nuevo_css);
         link.style.display = 'block';
     }, false);
-
 };
